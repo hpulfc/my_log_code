@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="ele.css">
+    <style>
+        #main_app div {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="main_app">
+    <div><h1>{{ hello }}</h1></div>
+    <div> old: {{ old_cm }}, new: {{ new_cm }}</div>
+    <div>
+        <el-button @click="old_cm += 1">加一</el-button>
+    </div>
+    <div>
+        <p v-bind:style="{color:'red'}">基本样式值绑定</p>
+    </div>
+    <div>
+        <p v-bind:class="{attr1:true}">class属性值绑定</p>
+    </div>
+    <div>
+        <p v-bind:class="'att2'">class属性值绑定</p>
+    </div>
+    <div>
+        <el-button @click="add_old_cm">事件处理</el-button>
+    </div>
+
+    <hr>
+    <div>
+        <h1>组件</h1>
+        <p>out_counter: {{ out_counter }}</p>
+        <my_counter v-bind:outer2inner_counter="out_counter" v-on:out_reg_event="out_counter_call_back1"></my_counter>
+        <my_counter v-bind:outer2inner_counter="out_counter"
+                    v-on:out_reg_event="out_counter_call_back2(arguments)"></my_counter>
+    </div>
+
+    <hr>
+    <div>
+        <h1>axios</h1>
+        <p>{{ axios_info }}</p>
+        <el-button @click="get_info">Get Info</el-button>
+    </div>
+
+</div>
+<script src="vue.min.js"></script>
+<script src="ele.js"></script>
+<script src="axios.min.js"></script>
+<script>
+
+    var my_component = {
+        template: '<el-button @click="inner_click">{{ inner_counter }}</el-button>',
+        props: ["outer2inner_counter"],
+        data: function () {
+            return {
+                inner_counter: this.outer2inner_counter,
+                add_count: 2
+            }
+        },
+        methods: {
+            inner_click: function (event) {
+                this.inner_counter += this.add_count;
+                this.$emit("out_reg_event", this.add_count, this.add_count)
+            }
+        }
+    };
+
+    Vue.component("my_counter", my_component);
+
+    vm = new Vue({
+        el: "#main_app",
+        data: {
+            "hello": "hello  vue",
+            old_cm: 1,
+            out_counter: 1,
+            axios_info: null
+        },
+        computed: {
+            new_cm: function () {
+                return this.old_cm + 1
+            }
+        },
+        watch: {
+            old_cm: function (new_v, old_v) {
+                window.alert("" + old_v + "+" + new_v)
+            }
+        },
+        methods: {
+            add_old_cm: function (event) {
+                this.old_cm = this.old_cm + 1
+            },
+            out_counter_call_back1: function () {
+                this.out_counter += 1
+            },
+            out_counter_call_back2: function (args) {
+                this.out_counter += args[0]
+            },
+            get_info: function () {
+                axios.get("http://127.0.0.1:8080/").then(response => {
+                    this.axios_info = response.data
+                }).catch(function (error) {
+                    console.log(error)
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>
