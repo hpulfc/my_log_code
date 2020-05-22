@@ -126,3 +126,9 @@ class LRUCache(object):
 
         # print self.nl
 
+lru = LRUCache(3)
+lru.put("a", 1)
+lru.put("b", 2)
+lru.put("c", 3)
+lru.put("d", 4)
+lru.get("a")

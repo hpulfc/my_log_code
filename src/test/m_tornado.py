@@ -21,19 +21,19 @@ await_ables = map(lambda _: functools.partial(async_req, _), urls)
 for item in await_ables:
     print(item)
 
-wait_iterator = gen.WaitIterator(await_ables)
+# wait_iterator = gen.WaitIterator(await_ables)
 
 
-def item_wait():
-    while not wait_iterator.done():
-        try:
-            result = yield wait_iterator.next()
-        except Exception as e:
-            print(wait_iterator.current_index, e)
-        else:
-            print("Result {} received from {} at {}".format(
-                result, wait_iterator.current_future,
-                wait_iterator.current_index))
+# def item_wait():
+#     while not wait_iterator.done():
+#         try:
+#             result = yield wait_iterator.next()
+#         except Exception as e:
+#             print(wait_iterator.current_index, e)
+#         else:
+#             print("Result {} received from {} at {}".format(
+#                 result, wait_iterator.current_future,
+#                 wait_iterator.current_index))
+#
 
-
-item_wait()
+# item_wait()
