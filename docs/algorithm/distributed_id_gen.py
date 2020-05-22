@@ -61,8 +61,8 @@ def g_id():
 
 
 def w():
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        task = [executor.submit(g_id) for _ in range(0, 10 ** 3)]
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        task = [executor.submit(g_id) for _ in range(0, 10 ** 4)]
         result = [r.result() for r in as_completed(task)]
         result = sorted(result)
         print(result)
